@@ -24,7 +24,7 @@ import youtube_dl
 
 @Client.on_message(filters.command("audio", "!"))
 async def audio_dl(client, message):
-    msg = await message.reply("⏳ __Please wait.__")
+    msg = await message.reply("⏳ __Tunggu Sebentar.__")
     try: INPUT_SOURCE = message.text.split(" ", 1)[1]
     except IndexError: return await msg.edit("🔎 __Give me a search queue__")
     if match_url(INPUT_SOURCE) is None:
@@ -40,13 +40,13 @@ async def audio_dl(client, message):
         'quite':True
     }
     try:
-        await msg.edit("📥 __Downloading...__")
+        await msg.edit("🗂️ __Sedang Mendownload...__")
         with youtube_dl.YoutubeDL(aud_opts) as ytdl:
             ytdl_data = ytdl.extract_info(FINAL_URL, download=True)
             fname = ytdl.prepare_filename(ytdl_data)
     except Exception as e:
         return await msg.edit(f"`{e}`")
-    await msg.edit("📤 __Uploading...__")
+    await msg.edit("📹 __Sedang Mengupload...__")
     await message.reply_audio(
         fname,
         caption=ytdl_data['title'],
@@ -59,7 +59,7 @@ async def audio_dl(client, message):
     
 @Client.on_message(filters.command("video", "!"))
 async def video_dl(client, message):
-    msg = await message.reply("⏳ __Please wait.__")
+    msg = await message.reply("⏳ __Tunggu Sebentar.__")
     try: INPUT_SOURCE = message.text.split(" ", 1)[1]
     except IndexError: return await msg.edit("🔎 __Give me a search queue__")
     if match_url(INPUT_SOURCE) is None:
@@ -75,13 +75,13 @@ async def video_dl(client, message):
         'quite':True
     }
     try:
-        await msg.edit("📥 __Downloading...__")
+        await msg.edit("🗂️ __Sedang Mendownload...__")
         with youtube_dl.YoutubeDL(vid_opts) as ytdl:
             ytdl_data = ytdl.extract_info(FINAL_URL, download=True)
             fname = ytdl.prepare_filename(ytdl_data)
     except Exception as e:
         return await msg.edit(f"`{e}`")
-    await msg.edit("📤 __Uploading...__")
+    await msg.edit("📹 __Sedang Mengupload...__")
     await message.reply_video(
         fname,
         caption=ytdl_data['title'])
