@@ -31,10 +31,10 @@ async def pause_vc(client, message):
     if not message.from_user.id in ADMINS: return
     if vc_paused is False:
         await group_call.set_pause(True)
-        await message.reply("__VC Paused!__")
+        await message.reply("__🙅 Video Di Jeda__")
         vc_paused = True
     elif vc_paused is True:
-        return await message.reply("__Already Paused.__")
+        return await message.reply("__🤦 Sudah Di Jeda__")
           
 @Client.on_message(filters.command("resume", "!"))
 async def resume_vc(client, message):
@@ -43,27 +43,27 @@ async def resume_vc(client, message):
     if not message.from_user.id in ADMINS: return
     if vc_paused is True:
         await group_call.set_pause(False)
-        await message.reply("__VC Resumed!__")
+        await message.reply("__⏺️ VC Resumed__")
         vc_paused = False
     elif vc_paused is False:
-        return await message.reply("__VC not Paused.__")
+        return await message.reply("__⏺️ VC not Paused.__")
 
 @Client.on_message(filters.command("help", "!"))
 async def help_vc(client, message):
-    text = '''====== Help Menu ======
-**Play as Audio**
+    text = '''====== MENU MUSIC @Rafens ======
+**🎧 Menu Memutar Audio**
 - !play __(reply to audio / youtube url / search query)__
 - !radio __(radio stream url)__
 
-**Play as Video**
+**🎬 Menu Streaming Video**
 - !stream __(reply to video / youtube url / search query)__
 - !live __(youtube live stream url)__
 
-**Extra**
-- !endvc: Leave from vc.
-- !skip: Skip the current song.
-- !pause: Pause the vc.
-- !resume: Resume the vc.
-- !video: Download url or search query in video format.
-- !audio: Download url or search query in audio format.'''
+**Extra/Tambahan**
+- !endvc: Keluar dari VCG/OS.
+- !skip: Skip Lagu/Video Yang Di Play.
+- !pause: Pause Video/Lagu.
+- !resume: Resume Video/Lagu.
+- !video: Download Video Atau Mencari Video Dengan Format.
+- !audio: Download Lagu Atau Mencari Lagu Dengan Format.'''
     await message.reply(text)
