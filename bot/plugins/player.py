@@ -35,25 +35,25 @@ async def play_or_queue(status, data=None):
             music_queue.append(data)
             if data['TYPE'] == "audio":
                 await group_call.start_audio(data['LOCAL_FILE'], repeat=False)
-                return {"status":"play", "msg":f"🚩 __{data['VIDEO_TITLE']} is Playing...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
+                return {"status":"play", "msg":f"🎵 __{data['VIDEO_TITLE']} Memutar Lagu...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
             elif data['TYPE'] == "video":
                 await group_call.start_video(data['LOCAL_FILE'], repeat=False)
-                return {"status":"play", "msg":f"🚩 __{data['VIDEO_TITLE']} is Streaming...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
+                return {"status":"play", "msg":f"🎬 __{data['VIDEO_TITLE']} Memutar Video...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
         elif len(music_queue) > 0:
             music_queue.append(data)
-            return {"status":"queue", "msg":f"🚩 __Queued at {len(music_queue)-1}__"}
+            return {"status":"queue", "msg":f"🔁 __Queued at {len(music_queue)-1}__"}
     elif status == "check":
         if len(music_queue) == 0:
             await group_call.stop()
-            return {"status":"empty", "msg":"💬 __Queue empty. Leaving...__"}
+            return {"status":"empty", "msg":"❌ __Queue empty. Leaving...__"}
         elif len(music_queue) > 0:
             data = music_queue[0]
             if data['TYPE'] == "audio":
                 await group_call.start_audio(data['LOCAL_FILE'], repeat=False)
-                return {"status":"play", "msg":f"🚩 __{data['VIDEO_TITLE']} is Playing...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
+                return {"status":"play", "msg":f"🎵 __{data['VIDEO_TITLE']} Memutar Lagu...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
             elif data['TYPE'] == "video":
                 await group_call.start_video(data['LOCAL_FILE'], repeat=False)
-                return {"status":"play", "msg":f"🚩 __{data['VIDEO_TITLE']} is Streaming...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
+                return {"status":"play", "msg":f"🎬 __{data['VIDEO_TITLE']} Memutar Video...__\n**Duration:** `{data['VIDEO_DURATION']}`", "thumb":data['THUMB_URL']}
 
 @Client.on_message(filters.command("endvc", "!"))
 async def leave_vc(client, message):
@@ -70,12 +70,12 @@ async def live_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
     if not message.from_user.id in ADMINS: return
-    msg = await message.reply("⏳ __Please wait.__")
+    msg = await message.reply("⏳ __Tunggu Sebentar.__")
     media = message.reply_to_message
     try: INPUT_SOURCE = message.text.split(" ", 1)[1]
-    except IndexError: return await msg.edit("🔎 __Give me a URL__")
+    except IndexError: return await msg.edit("🔎 __Berikan Saya Link Lagu/Video__")
     if match_url(INPUT_SOURCE, key="yt") is None:
-        return await msg.edit("🔎 __Give me a valid URL__")
+        return await msg.edit("🔎 __Berikan Saya Link Lagu/Video__")
     #ytlink = await run_cmd(f"youtube-dl -g {INPUT_SOURCE}")
     videof = pafy.new(INPUT_SOURCE)
     ytlink = videof.getbest().url
@@ -89,7 +89,7 @@ async def live_vc(client, message):
             await asyncio.sleep(3)
             await group_call.join(CHAT_ID)
             
-        await msg.edit("🚩 __Live Streaming...__")
+        await msg.edit("🎬 __Sedang Melakukan Streaming...__")
         await group_call.start_video(ytlink, repeat=False, enable_experimental_lip_sync=True)
         vc_live = True
     except Exception as e:
@@ -101,12 +101,12 @@ async def radio_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
     if not message.from_user.id in ADMINS: return
-    msg = await message.reply("⏳ __Please wait.__")
+    msg = await message.reply("⏳ __Tunggu Sebentar.__")
     media = message.reply_to_message
     try: INPUT_SOURCE = message.text.split(" ", 1)[1]
     except IndexError: return await msg.edit("🔎 __All radio stations listed [here](https://github.com/AnjanaMadu/radio_stations). Please get link from [here](https://github.com/AnjanaMadu/radio_stations)__", disable_web_page_preview=True)
     if match_url(INPUT_SOURCE) is None:
-        return await msg.edit("🔎 __Give me a valid URL__")
+        return await msg.edit("🔎 __Berikan Saya Link • Lagu/Video__")
     try:
         if not group_call.is_connected:
             await group_call.join(CHAT_ID)
@@ -115,7 +115,7 @@ async def radio_vc(client, message):
             await asyncio.sleep(3)
             await group_call.join(CHAT_ID)
             
-        await msg.edit("🚩 __Radio Playing...__")
+        await msg.edit("📻 __Memutar Radio...__")
         await group_call.start_audio(INPUT_SOURCE, repeat=False)
         vc_live = True
     except Exception as e:
@@ -126,13 +126,13 @@ async def radio_vc(client, message):
 async def play_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
-    msg = await message.reply("⏳ __Please wait.__")
+    msg = await message.reply("⏳ __Tunggu Sebentar.__")
     if vc_live == True:
         return await msg.edit("💬 __Live or Radio Ongoing. Please stop it via `!endvc`.__")
     media = message.reply_to_message
     THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = "https://appletld.com/wp-content/uploads/2020/10/E3593D8D-6F1C-4A16-B065-2154ED6B2355.png", "Music", "Not Found"
     if media and media.media:
-        await msg.edit("📥 __Downloading...__")
+        await msg.edit("🗂️ __Sedang Mendownload...__")
         LOCAL_FILE = await client.download_media(media)
     else:
         try: INPUT_SOURCE = message.text.split(" ", 1)[1]
@@ -142,10 +142,10 @@ async def play_vc(client, message):
         else:
             FINAL_URL = yt_video_search(INPUT_SOURCE)
             if FINAL_URL == 404:
-                return await msg.edit("__No videos found__ 🤷‍♂️")
-        await msg.edit("📥 __Downloading...__")
+                return await msg.edit("__Video Tidak Temukan__ 👀")
+        await msg.edit("🗂️ __Sedang Mendownload...__")
         LOCAL_FILE, THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = video_info_extract(FINAL_URL, key="audio")
-        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️")
+        if LOCAL_FILE == 500: return await msg.edit("__Donwload Eror / Muka lu Jelek.__ 🥴")
          
     try:
         post_data = {'LOCAL_FILE':LOCAL_FILE, 'THUMB_URL':THUMB_URL, 'VIDEO_TITLE':VIDEO_TITLE, 'VIDEO_DURATION':VIDEO_DURATION, 'TYPE':'audio'}
@@ -163,13 +163,13 @@ async def play_vc(client, message):
 async def stream_vc(client, message):
     global vc_live
     if not message.chat.id == CHAT_ID: return
-    msg = await message.reply("⏳ __Please wait.__")
+    msg = await message.reply("⏳ __Tunggu Sebentar.__")
     if vc_live == True:
         return await msg.edit("💬 __Live or Radio Ongoing. Please stop it via `!endvc`.__")
     media = message.reply_to_message
     THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = "https://appletld.com/wp-content/uploads/2020/10/E3593D8D-6F1C-4A16-B065-2154ED6B2355.png", "Music", "Not Found"
     if media and media.media:
-        await msg.edit("📥 __Downloading...__")
+        await msg.edit("🗂️ __Sedang Mendownload...__")
         LOCAL_FILE = await client.download_media(media)
     else:
         try: INPUT_SOURCE = message.text.split(" ", 1)[1]
@@ -179,10 +179,10 @@ async def stream_vc(client, message):
         else:
             FINAL_URL = yt_video_search(INPUT_SOURCE)
             if FINAL_URL == 404:
-                return await msg.edit("__No videos found__ 🤷‍♂️")
-        await msg.edit("📥 __Downloading...__")
+                return await msg.edit("__Video Tidak Di Temukan__ 👀")
+        await msg.edit("🗂️ __Sedang Mendownload...__")
         LOCAL_FILE, THUMB_URL, VIDEO_TITLE, VIDEO_DURATION = video_info_extract(FINAL_URL, key="video")
-        if LOCAL_FILE == 500: return await msg.edit("__Download Error.__ 🤷‍♂️")
+        if LOCAL_FILE == 500: return await msg.edit("__Download Error / Muka Lu Jelek__ 🥴")
     try:
         post_data = {'LOCAL_FILE':LOCAL_FILE, 'THUMB_URL':THUMB_URL, 'VIDEO_TITLE':VIDEO_TITLE, 'VIDEO_DURATION':VIDEO_DURATION, 'TYPE':'video'}
         resp = await play_or_queue("add", post_data)
